@@ -18,11 +18,12 @@ public class Calculate {
     public Double addNumber(Double newOperand, String operation) {
         if (firstOperand == null) {
             firstOperand = newOperand;
+            this.operation = convertStringToOperation(operation);
             return 0d;
         } else {
             if (secondOperand == null) {
                 secondOperand = newOperand;
-                return 0d;
+                return madeOperation(this.operation);
             } else {
                 if (operation != null) {
                     result = madeOperation(this.operation);
