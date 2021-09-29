@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
                             result = Double.NEGATIVE_INFINITY;
                         else
                             result = Double.NaN;
-                    }
+                    } else
+                        result = num1 / num2;
                     break;
                 case "*":
                     result = num1 * num2;
