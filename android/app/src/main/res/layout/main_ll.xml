@@ -6,12 +6,25 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/operationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="9dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/edit1"
+        app:layout_constraintEnd_toStartOf="@+id/tv1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:text="+" />
+
+    <TextView
         android:id="@+id/tv1"
-        android:layout_width="402dp"
+        android:layout_width="340dip"
         android:layout_height="wrap_content"
         android:layout_margin="5dip"
         android:layout_marginTop="4dp"
-        android:text="Test text"
         android:textAlignment="textEnd"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,38 +75,8 @@
                 android:backgroundTint="@color/main_buttons"
                 android:minWidth="92dp"
                 android:minHeight="88dp"
-                android:onClick="numberButtonsClick"
+                android:onClick="clearAll"
                 android:text="AC"
-                android:textSize="34sp" />
-
-            <Button
-                android:id="@+id/bRemoveLast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dip"
-                android:layout_marginRight="3dip"
-                android:layout_span="1"
-                android:backgroundTint="@color/main_buttons"
-                android:minWidth="92dp"
-                android:minHeight="88dp"
-                android:paddingTop="0dp"
-                android:paddingBottom="10dp"
-                android:text="&#8592;"
-                android:textSize="34sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/bPlusMinus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dip"
-                android:layout_marginRight="3dip"
-                android:layout_span="1"
-                android:backgroundTint="@color/main_buttons"
-                android:minWidth="92dp"
-                android:minHeight="88dp"
-                android:paddingTop="0dp"
-                android:text="+/-"
                 android:textSize="34sp" />
 
             <Button
@@ -108,6 +91,23 @@
                 android:onClick="operationButtonsClick"
                 android:text="/"
                 android:textSize="34sp" />
+
+            <Button
+                android:id="@+id/bRemoveLast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="3dip"
+                android:layout_span="2"
+                android:backgroundTint="@color/main_buttons"
+                android:minWidth="92dp"
+                android:minHeight="88dp"
+                android:onClick="removeOneDigit"
+                android:paddingTop="0dp"
+                android:paddingBottom="10dp"
+                android:text="&#8592;"
+                android:textSize="34sp"
+                android:textStyle="bold" />
 
         </TableRow>
 
@@ -302,6 +302,7 @@
                 android:backgroundTint="@color/main_buttons"
                 android:minWidth="92dp"
                 android:minHeight="88dp"
+                android:onClick="dotClick"
                 android:text="."
                 android:textSize="34sp" />
 
@@ -328,6 +329,7 @@
                 android:backgroundTint="@color/main_buttons"
                 android:minWidth="92dp"
                 android:minHeight="88dp"
+                android:onClick="equalButton"
                 android:text="="
                 android:textSize="34sp" />
         </TableRow>
