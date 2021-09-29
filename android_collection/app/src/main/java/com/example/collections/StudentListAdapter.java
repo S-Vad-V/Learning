@@ -23,11 +23,13 @@ public class StudentListAdapter extends BaseAdapter {
     private List<Student> students;
     private Context context;
     private LayoutInflater layoutInflater;
+    private String chooseFaculty;
 
     public StudentListAdapter(List<Student> students, Context context) {
         this.students = students;
         this.context = context;
         this.layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.chooseFaculty = null;
     }
 
     @Override
@@ -55,13 +57,24 @@ public class StudentListAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.tvElementFaculty)).setText(students.get(index).getFacultet());
         ((TextView) view.findViewById(R.id.tvElementGroup)).setText(students.get(index).getGroup());
 
-        if (index %2 == 1){
-            view.findViewById(R.id.llElement).setBackgroundColor(
-                    context.getResources().getColor(R.color.oddElement)
+//        if (index % 2 == 1) {
+//            view.findViewById(R.id.llElement).setBackgroundColor(
+//                    context.getResources().getColor(R.color.oddElement)
+//            );
+//        }
+
+        if (students.get(index).getFacultet().trim().equalsIgnoreCase(chooseFaculty)) {
+            ((TextView) view.findViewById(R.id.tvElementFIO)).setTextColor(
+                    context.getResources().getColor(R.color.chooseFaculty)
+            );
+            ((TextView) view.findViewById(R.id.tvElementFaculty)).setTextColor(
+                    context.getResources().getColor(R.color.chooseFaculty)
+            );
+            ((TextView) view.findViewById(R.id.tvElementGroup)).setTextColor(
+                    context.getResources().getColor(R.color.chooseFaculty)
             );
         }
 
         return view;
-
     }
 }

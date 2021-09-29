@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
-* Если нажать на любого студента, выделить всех студентов этого факультета одним цветом.
-*/
+ * Если нажать на любого студента, выделить всех студентов этого факультета одним цветом.
+ */
 
 public class MainActivity extends AppCompatActivity {
     private List<String> list;
@@ -68,14 +68,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void addStudent(View view) {
         studentList.add(Student.builder()
-                .fio(((EditText)findViewById(R.id.editFIO)).getText().toString())
-                .facultet(((EditText)findViewById(R.id.editFaculty)).getText().toString())
-                .group(((EditText)findViewById(R.id.editGroup)).getText().toString())
+                .fio(((EditText) findViewById(R.id.editFIO)).getText().toString())
+                .facultet(((EditText) findViewById(R.id.editFaculty)).getText().toString())
+                .group(((EditText) findViewById(R.id.editGroup)).getText().toString())
                 .build());
 
-        ((EditText)findViewById(R.id.editFIO)).setText("");
-        ((EditText)findViewById(R.id.editFaculty)).setText("");
-        ((EditText)findViewById(R.id.editGroup)).setText("");
+        ((EditText) findViewById(R.id.editFIO)).setText("");
+        ((EditText) findViewById(R.id.editFaculty)).setText("");
+        ((EditText) findViewById(R.id.editGroup)).setText("");
+        studentListAdapter.notifyDataSetChanged();
+    }
+
+    public void showAllStudentsByGroup(View view) {
+        studentListAdapter.setChooseFaculty(((TextView) view.findViewById(R.id.tvElementFaculty)).getText().toString().trim());
         studentListAdapter.notifyDataSetChanged();
     }
 }
