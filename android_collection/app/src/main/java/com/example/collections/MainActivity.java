@@ -2,13 +2,17 @@ package com.example.collections;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.collections.models.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +67,33 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.llInput).setVisibility(View.VISIBLE);
         findViewById(R.id.bAddStudent).setVisibility(View.VISIBLE);
         findViewById(R.id.bCreateStudentList).setVisibility(View.GONE);
+
+        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                studentListAdapter.setChooseFaculty(((TextView) view.findViewById(R.id.tvElementFaculty)).getText().toString().trim());
+                studentListAdapter.notifyDataSetChanged();
+
+                // При клике, передадим управление активности в element
+                Intent intent = new Intent(MainActivity.this, StudentInfoActivity.class);
+
+//                intent.putExtra("fio", ((TextView)view.findViewById(R.id.tvElementFIO)).getText().toString());
+//                intent.putExtra("facultet", ((TextView)view.findViewById(R.id.tvElementFaculty)).getText().toString());
+//                intent.putExtra("group", ((TextView)view.findViewById(R.id.tvElementGroup)).getText().toString());
+
+//                Bundle bundle = new Bundle();
+//                bundle.putString("fio", studentList.get(i).getFio());
+//                bundle.putString("group", studentList.get(i).getGroup());
+//                bundle.putString("facultet", studentList.get(i).getFacultet());
+//
+//                intent.putExtras(bundle);
+
+                intent.putExtra("student", studentList.get(i));
+
+                startActivity(intent);
+            }
+        };
+        listView.setOnItemClickListener(clickListener);
     }
 
 
@@ -76,11 +107,6 @@ public class MainActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.editFIO)).setText("");
         ((EditText) findViewById(R.id.editFaculty)).setText("");
         ((EditText) findViewById(R.id.editGroup)).setText("");
-        studentListAdapter.notifyDataSetChanged();
-    }
-
-    public void showAllStudentsByGroup(View view) {
-        studentListAdapter.setChooseFaculty(((TextView) view.findViewById(R.id.tvElementFaculty)).getText().toString().trim());
         studentListAdapter.notifyDataSetChanged();
     }
 }
