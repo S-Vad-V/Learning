@@ -7,12 +7,31 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class Subject implements Parcelable {
     private String name;
     private Integer mark;
+
+    public Subject(String name, Integer mark) {
+        this.name = name;
+        this.mark = mark;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getMark() {
+        return mark;
+    }
+
+    public void setMark(Integer mark) {
+        this.mark = mark;
+    }
 
     protected Subject(Parcel in) {
         name = in.readString();

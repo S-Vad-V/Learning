@@ -1,5 +1,10 @@
 package com.example.collections;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.collections.adapters.StudentListAdapter;
 import com.example.collections.models.Student;
 
 import java.util.ArrayList;
@@ -26,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Student> studentList;
     private StudentListAdapter studentListAdapter;
 
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +45,21 @@ public class MainActivity extends AppCompatActivity {
         );
         list = new ArrayList<>();
         studentList = new ArrayList<>();
+
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Intent intent = result.getData();
+                        Student student = intent.getParcelableExtra("student");
+                        studentList.set(position, student);
+                        Toast.makeText(getApplicationContext(),
+                                "Student :" + student.toString() + "\n Success saved",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     public void createList(View view) {
@@ -87,15 +111,13 @@ public class MainActivity extends AppCompatActivity {
 //                bundle.putString("facultet", studentList.get(i).getFacultet());
 //
 //                intent.putExtras(bundle);
-
                 intent.putExtra("student", studentList.get(i));
-
-                startActivity(intent);
+                position = i;
+                activityResultLauncher.launch(intent);
             }
         };
         listView.setOnItemClickListener(clickListener);
     }
-
 
     public void addStudent(View view) {
         studentList.add(Student.builder()

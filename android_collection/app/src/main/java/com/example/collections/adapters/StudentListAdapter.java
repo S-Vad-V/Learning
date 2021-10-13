@@ -1,4 +1,4 @@
-package com.example.collections;
+package com.example.collections.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.collections.R;
 import com.example.collections.models.Student;
 
 import java.util.List;
