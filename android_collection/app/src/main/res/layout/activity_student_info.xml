@@ -83,15 +83,12 @@
                 android:layout_marginRight="5dip"
                 android:text="Mark" />
 
-            <EditText
-                android:id="@+id/editAsiSubjectMark"
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/sAsiMark"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="5"
-                android:inputType="number"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_weight="5"
+                android:entries="@array/marks" />
 
         </LinearLayout>
 

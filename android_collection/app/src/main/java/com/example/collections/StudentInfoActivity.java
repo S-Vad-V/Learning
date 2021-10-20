@@ -1,12 +1,18 @@
 package com.example.collections;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.collections.adapters.SubjectListAdapter;
@@ -43,11 +49,64 @@ public class StudentInfoActivity extends AppCompatActivity {
 
         subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
         ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
+
+        ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                AlertDialog.Builder deleteDialog = new AlertDialog.Builder(StudentInfoActivity.this);
+                deleteDialog.setTitle("Delete?");
+                deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        student.getSubjects().remove(position);
+                        subjectListAdapter.notifyDataSetChanged();
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                deleteDialog.show();
+                return false;
+            }
+        });
+//        ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                showPopupMenu(view.findViewById(R.id.tvSubjectMark), position);
+//            }
+//        });
+    }
+
+    public void showPopupMenu(View view, int position) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Integer mark;
+                switch (menuItem.getItemId()) {
+                    case R.id.popup1: {mark = 1; break;}
+                    case R.id.popup2: {mark = 2; break;}
+                    case R.id.popup3: {mark = 3; break;}
+                    case R.id.popup4: {mark = 4; break;}
+                    case R.id.popup5: {mark = 5; break;}
+                    default:
+                        return false;
+                }
+                if ((student != null) && (position < student.getSubjects().size())) {
+                    student.getSubjects().get(position).setMark(mark);
+                    subjectListAdapter.notifyDataSetChanged();
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
     }
 
     public void addSubject(View view) {
         student.addSubject(new Subject(((EditText) findViewById(R.id.editAsiSubjectName)).getText().toString(),
-                Integer.parseInt(((EditText) findViewById(R.id.editAsiSubjectMark)).getText().toString())));
+                Integer.parseInt(((Spinner) findViewById(R.id.sAsiMark)).getSelectedItem().toString())));
         subjectListAdapter.notifyDataSetChanged();
     }
 
@@ -60,5 +119,23 @@ public class StudentInfoActivity extends AppCompatActivity {
 
     public void exit(View view) {
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(this);
+        quitDialog.setTitle("Save changes?");
+        quitDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                saveState(null);
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                exit(null);
+            }
+        });
+        quitDialog.show();
     }
 }

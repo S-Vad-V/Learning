@@ -54,6 +54,13 @@ public class SubjectListAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.tvSubjectName)).setText(subjectList.get(index).getName());
         ((TextView) view.findViewById(R.id.tvSubjectMark)).setText(subjectList.get(index).getMark().toString());
 
+        ((TextView) view.findViewById(R.id.tvSubjectMark)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         return view;
     }
 }

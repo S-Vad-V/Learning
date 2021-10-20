@@ -5,10 +5,14 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,9 +27,6 @@ import com.example.collections.models.Student;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Если нажать на любого студента, выделить всех студентов этого факультета одним цветом.
- */
 
 public class MainActivity extends AppCompatActivity {
     private List<String> list;
@@ -60,6 +61,35 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.miAbout: {
+                AlertDialog.Builder infoDialog = new AlertDialog.Builder(MainActivity.this);
+                infoDialog.setTitle("About program");
+                infoDialog.setMessage("This program wrote Vadim Storchak");
+                infoDialog.setCancelable(false);
+                infoDialog.setPositiveButton("Readied", null);
+
+                infoDialog.show();
+                return true;
+            }
+            case R.id.miExit: {
+                finish();
+                return true;
+            }
+            default: {
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void createList(View view) {
