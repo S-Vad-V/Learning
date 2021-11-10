@@ -6,11 +6,17 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,10 +29,19 @@ import android.widget.Toast;
 
 import com.example.collections.adapters.StudentListAdapter;
 import com.example.collections.models.Student;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+/*
+ * Новый проект. При открытие появляется список студентов. Дбавить crud операции для студентов в меню (правый верхний угол)
+ * Перенести добавление/изменение данных о студенте в новом активити
+ * CRUD дисциплины сделать в диалоговом окне
+ *
+ */
 
 public class MainActivity extends AppCompatActivity {
     private List<String> list;
@@ -46,6 +61,20 @@ public class MainActivity extends AppCompatActivity {
         );
         list = new ArrayList<>();
         studentList = new ArrayList<>();
+
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        int size = sharedPreferences.getInt("count", 0);
+        if (size > 0) {
+            Gson gson = (new GsonBuilder()).create();
+            for (int i = 0; i < size; i++) {
+                String studentJson = sharedPreferences.getString("student" + i, "");
+                if (!studentJson.isEmpty()) {
+                    Student student = gson.fromJson(studentJson, Student.class);
+                    studentList.add(student);
+                }
+            }
+        }
+        createStudentList(null);
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -150,6 +179,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addStudent(View view) {
+        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editFIO)).getText().toString())) {
+            ((EditText) findViewById(R.id.editFIO)).setError("Enter your FIO");
+            return;
+        }
+        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editGroup)).getText().toString())) {
+            ((EditText) findViewById(R.id.editGroup)).setError("Enter your Group");
+            return;
+        }
+        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editFaculty)).getText().toString())) {
+            ((EditText) findViewById(R.id.editFaculty)).setError("Enter your Faculty");
+            return;
+        }
+
         studentList.add(Student.builder()
                 .fio(((EditText) findViewById(R.id.editFIO)).getText().toString())
                 .facultet(((EditText) findViewById(R.id.editFaculty)).getText().toString())
@@ -160,5 +202,31 @@ public class MainActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.editFaculty)).setText("");
         ((EditText) findViewById(R.id.editGroup)).setText("");
         studentListAdapter.notifyDataSetChanged();
+    }
+
+    private boolean checkField(EditText editText) {
+        boolean isEmpty = TextUtils.isEmpty(editText.getText().toString());
+        if (isEmpty) {
+            ((EditText) findViewById(R.id.editFIO)).setError("Enter value");
+        }
+        return isEmpty;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onDestroy() {
+        if (studentList != null) {
+            SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            editor.putInt("count", studentList.size());
+            AtomicInteger counter = new AtomicInteger(0);
+            studentList.forEach(student -> {
+                String jsonStudent = gson.toJson(student);
+                editor.putString("student" + counter.getAndIncrement(), jsonStudent);
+            });
+            editor.commit();
+        }
+        super.onDestroy();
     }
 }
