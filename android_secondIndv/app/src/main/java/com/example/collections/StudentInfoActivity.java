@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,14 +21,11 @@ import com.example.collections.adapters.SubjectListAdapter;
 import com.example.collections.models.Student;
 import com.example.collections.models.Subject;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 
 public class StudentInfoActivity extends AppCompatActivity {
     private SubjectListAdapter subjectListAdapter;
     private Student student;
+    private Integer selectedSubject = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +42,32 @@ public class StudentInfoActivity extends AppCompatActivity {
 //        ((TextView) findViewById(R.id.tvElementGroup)).setText(bundle.getString("group"));
 
         this.student = getIntent().getParcelableExtra("student");
-        ((TextView) findViewById(R.id.tvAsiFIO)).setText(student.getFio());
-        ((TextView) findViewById(R.id.tvAsiFaculty)).setText(student.getFacultet());
-        ((TextView) findViewById(R.id.tvAsiGroup)).setText(student.getGroup());
+        if (this.student != null) {
+            ((EditText) findViewById(R.id.editStudentFio)).setText(student.getFio());
+            ((EditText) findViewById(R.id.editStudentFaculty)).setText(student.getFacultet());
+            ((EditText) findViewById(R.id.editStudentGroup)).setText(student.getGroup());
 
-        subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
-        ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
+
+            subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
+            ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedSubject != null) {
+                        student.getSubjects().remove(selectedSubject);
+                        subjectListAdapter.removeSubject(selectedSubject);
+                        subjectListAdapter.notifyDataSetChanged();
+                    }
+                }
+            };
+            findViewById(R.id.bSubjectDelete).setOnClickListener(clickListener);
+
+        } else {
+            this.student = new Student();
+
+            subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
+            ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
+        }
 
         ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -69,6 +87,13 @@ public class StudentInfoActivity extends AppCompatActivity {
                 });
                 deleteDialog.show();
                 return false;
+            }
+        });
+
+        ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSubject = i;
             }
         });
 

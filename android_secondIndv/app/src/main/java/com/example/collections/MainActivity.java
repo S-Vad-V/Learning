@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private StudentListAdapter studentListAdapter;
 
     private ActivityResultLauncher<Intent> activityResultLauncher;
-    private int position;
+    private Integer position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+        position = null;
     }
 
     @Override
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.miAbout: {
                 AlertDialog.Builder infoDialog = new AlertDialog.Builder(MainActivity.this);
                 infoDialog.setTitle("About program");
-                infoDialog.setMessage("This program wrote Vadim Storchak");
+                infoDialog.setMessage("This program wrote by Vadim Storchak");
                 infoDialog.setCancelable(false);
                 infoDialog.setPositiveButton("Readied", null);
 
@@ -113,6 +114,18 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.miExit: {
                 finish();
+                return true;
+            }
+            case R.id.miAddStudent: {
+                addStudentIntent();
+                return true;
+            }
+            case R.id.miDeleteStudent: {
+                deleteStudent();
+                return true;
+            }
+            case R.id.miUpdateStudent: {
+                updateStudent();
                 return true;
             }
             default: {
@@ -133,28 +146,51 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                studentListAdapter.setChooseFaculty(((TextView) view.findViewById(R.id.tvElementFaculty)).getText().toString().trim());
-                studentListAdapter.notifyDataSetChanged();
-
-                // При клике, передадим управление активности в element
-                Intent intent = new Intent(MainActivity.this, StudentInfoActivity.class);
-
-//                intent.putExtra("fio", ((TextView)view.findViewById(R.id.tvElementFIO)).getText().toString());
-//                intent.putExtra("facultet", ((TextView)view.findViewById(R.id.tvElementFaculty)).getText().toString());
-//                intent.putExtra("group", ((TextView)view.findViewById(R.id.tvElementGroup)).getText().toString());
-
-//                Bundle bundle = new Bundle();
-//                bundle.putString("fio", studentList.get(i).getFio());
-//                bundle.putString("group", studentList.get(i).getGroup());
-//                bundle.putString("facultet", studentList.get(i).getFacultet());
+//                studentListAdapter.setChooseFaculty(((TextView) view.findViewById(R.id.tvElementFaculty)).getText().toString().trim());
+//                studentListAdapter.notifyDataSetChanged();
 //
-//                intent.putExtras(bundle);
-                intent.putExtra("student", studentList.get(i));
+//                // При клике, передадим управление активности в element
+//                Intent intent = new Intent(MainActivity.this, StudentInfoActivity.class);
+//
+////                intent.putExtra("fio", ((TextView)view.findViewById(R.id.tvElementFIO)).getText().toString());
+////                intent.putExtra("facultet", ((TextView)view.findViewById(R.id.tvElementFaculty)).getText().toString());
+////                intent.putExtra("group", ((TextView)view.findViewById(R.id.tvElementGroup)).getText().toString());
+//
+////                Bundle bundle = new Bundle();
+////                bundle.putString("fio", studentList.get(i).getFio());
+////                bundle.putString("group", studentList.get(i).getGroup());
+////                bundle.putString("facultet", studentList.get(i).getFacultet());
+////
+////                intent.putExtras(bundle);
+//                intent.putExtra("student", studentList.get(i));
+//                position = i;
+//                activityResultLauncher.launch(intent);
+
+                studentListAdapter.setSelectedPosition(i);
                 position = i;
-                activityResultLauncher.launch(intent);
+                studentListAdapter.notifyDataSetChanged();
             }
         };
         listView.setOnItemClickListener(clickListener);
+    }
+
+    private void addStudentIntent() {
+        Intent intent = new Intent(MainActivity.this, StudentInfoActivity.class);
+        activityResultLauncher.launch(intent);
+    }
+
+    private void deleteStudent() {
+        if (position != null)
+            studentList.remove(position);
+        studentListAdapter.notifyDataSetChanged();
+    }
+
+    private void updateStudent() {
+        if (position != null) {
+            Intent intent = new Intent(MainActivity.this, StudentInfoActivity.class);
+            intent.putExtra("student", studentList.get(position));
+            activityResultLauncher.launch(intent);
+        }
     }
 
     public void addStudent(View view) {
