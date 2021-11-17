@@ -1,11 +1,13 @@
 package com.example.collections;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +28,29 @@ public class StudentInfoActivity extends AppCompatActivity {
     private SubjectListAdapter subjectListAdapter;
     private Student student;
     private Integer selectedSubject = null;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.subject_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.miAddSubject: {
+                addSubject();
+                return true;
+            }
+            case R.id.miUpdateSubject: {
+                updateSubject();
+                return true;
+            }
+            default: {
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +75,6 @@ public class StudentInfoActivity extends AppCompatActivity {
 
             subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
             ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (selectedSubject != null) {
-                        student.getSubjects().remove(selectedSubject);
-                        subjectListAdapter.removeSubject(selectedSubject);
-                        subjectListAdapter.notifyDataSetChanged();
-                    }
-                }
-            };
-            findViewById(R.id.bSubjectDelete).setOnClickListener(clickListener);
-
         } else {
             this.student = new Student();
 
@@ -94,6 +107,8 @@ public class StudentInfoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedSubject = i;
+                subjectListAdapter.setSelectedSubject(selectedSubject);
+                subjectListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -146,7 +161,7 @@ public class StudentInfoActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
-    public void addSubject(View view) {
+    public void addSubject() {
         AlertDialog.Builder inputDialog = new AlertDialog.Builder(StudentInfoActivity.this);
         inputDialog.setTitle("Subject Title");
         inputDialog.setCancelable(false);
@@ -162,11 +177,46 @@ public class StudentInfoActivity extends AppCompatActivity {
                         Integer.parseInt(mark.getSelectedItem().toString())));
                 subjectListAdapter.notifyDataSetChanged();
             }
-        }).setNegativeButton("Cansel", null);
+        }).setNegativeButton("Cancel", null);
         inputDialog.show();
 //        student.addSubject(new Subject(((EditText) findViewById(R.id.editAsiSubjectName)).getText().toString(),
 //                Integer.parseInt(((Spinner) findViewById(R.id.sAsiMark)).getSelectedItem().toString())));
 //        subjectListAdapter.notifyDataSetChanged();
+    }
+
+    private int getIndex(Spinner spinner, String myString) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+
+    public void updateSubject() {
+        if (selectedSubject != null) {
+            AlertDialog.Builder inputDialog = new AlertDialog.Builder(StudentInfoActivity.this);
+            inputDialog.setTitle("Subject Title");
+            inputDialog.setCancelable(false);
+            View inputView = (LinearLayout) getLayoutInflater().inflate(R.layout.subject_input, null);
+            inputDialog.setView(inputView);
+            final EditText name = inputView.findViewById(R.id.editDialogSubjectName);
+            final Spinner mark = inputView.findViewById(R.id.sDialogMark);
+            ((EditText) inputView.findViewById(R.id.editDialogSubjectName)).setText(student.getSubjects().get(selectedSubject).getName());
+            ((Spinner) inputView.findViewById(R.id.sDialogMark))
+                    .setSelection(getIndex(mark, student.getSubjects().get(selectedSubject).getMark().toString()));
+
+            inputDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    student.addSubject(new Subject(name.getText().toString(),
+                            Integer.parseInt(mark.getSelectedItem().toString())));
+                    subjectListAdapter.notifyDataSetChanged();
+                }
+            }).setNegativeButton("Cancel", null);
+            inputDialog.show();
+        }
     }
 
     public void saveState(View view) {

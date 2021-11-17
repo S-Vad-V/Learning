@@ -53,39 +53,4 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/bAddSubject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="addSubject"
-            android:text="Add Lesson" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/bSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="saveState"
-                android:text="Save" />
-
-            <Button
-                android:id="@+id/bExit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="exit"
-                android:text="Exit" />
-        </LinearLayout>
-    </LinearLayout>
-
 </LinearLayout>
