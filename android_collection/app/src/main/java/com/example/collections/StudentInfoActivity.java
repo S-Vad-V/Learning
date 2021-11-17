@@ -137,7 +137,7 @@ public class StudentInfoActivity extends AppCompatActivity {
                         Integer.parseInt(mark.getSelectedItem().toString())));
                 subjectListAdapter.notifyDataSetChanged();
             }
-        }).setNegativeButton("Cansel", null);
+        }).setNegativeButton("Cancel", null);
         inputDialog.show();
 //        student.addSubject(new Subject(((EditText) findViewById(R.id.editAsiSubjectName)).getText().toString(),
 //                Integer.parseInt(((Spinner) findViewById(R.id.sAsiMark)).getSelectedItem().toString())));
