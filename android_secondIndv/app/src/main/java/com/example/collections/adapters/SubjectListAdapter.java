@@ -25,11 +25,13 @@ public class SubjectListAdapter extends BaseAdapter {
     private List<Subject> subjectList;
     private Context context;
     private LayoutInflater layoutInflater;
+    private Integer selectedSubject;
 
     public SubjectListAdapter(List<Subject> subjectList, Context context) {
         this.subjectList = subjectList;
         this.context = context;
         this.layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.selectedSubject = null;
     }
 
     @Override
@@ -62,6 +64,12 @@ public class SubjectListAdapter extends BaseAdapter {
 
             }
         });
+
+        if (selectedSubject != null && index == selectedSubject) {
+            ((TextView) view.findViewById(R.id.tvSubjectName)).setTextColor(
+                    context.getResources().getColor(R.color.teal_200)
+            );
+        }
 
         return view;
     }

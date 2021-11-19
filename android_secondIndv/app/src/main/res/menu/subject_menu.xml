@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/miAddSubject"
+        android:title="Add subject" />
+    <item
+        android:id="@+id/miUpdateSubject"
+        android:title="Update subject" />
+</menu>
