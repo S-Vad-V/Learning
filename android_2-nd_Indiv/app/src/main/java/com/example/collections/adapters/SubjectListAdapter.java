@@ -14,10 +14,8 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,13 +23,13 @@ public class SubjectListAdapter extends BaseAdapter {
     private List<Subject> subjectList;
     private Context context;
     private LayoutInflater layoutInflater;
-    private Integer selectedSubject;
+    private Integer selectedSubjectPosition;
 
     public SubjectListAdapter(List<Subject> subjectList, Context context) {
         this.subjectList = subjectList;
+        this.selectedSubjectPosition = null;
         this.context = context;
         this.layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.selectedSubject = null;
     }
 
     @Override
@@ -65,16 +63,15 @@ public class SubjectListAdapter extends BaseAdapter {
             }
         });
 
-        if (selectedSubject != null && index == selectedSubject) {
-            ((TextView) view.findViewById(R.id.tvSubjectName)).setTextColor(
-                    context.getResources().getColor(R.color.teal_200)
-            );
+        if (selectedSubjectPosition != null) {
+            if (index == selectedSubjectPosition) {
+                ((TextView) view.findViewById(R.id.tvSubjectName)).setTextColor(
+                        context.getResources().getColor(R.color.chooseFaculty));
+                ((TextView) view.findViewById(R.id.tvSubjectMark)).setTextColor(
+                        context.getResources().getColor(R.color.chooseFaculty));
+            }
         }
 
         return view;
-    }
-
-    public void removeSubject(int index) {
-        subjectList.remove(index);
     }
 }

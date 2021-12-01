@@ -25,23 +25,12 @@ public class StudentListAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater layoutInflater;
     private String chooseFaculty;
-    private Integer selectedPosition;
-
-    public int getSelectedPosition() {
-        return selectedPosition;
-    }
-
-    public void setSelectedPosition(int selectedPosition) {
-        this.selectedPosition = selectedPosition;
-    }
-
 
     public StudentListAdapter(List<Student> students, Context context) {
         this.students = students;
         this.context = context;
         this.layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.chooseFaculty = null;
-        this.selectedPosition = null;
     }
 
     @Override
@@ -84,12 +73,6 @@ public class StudentListAdapter extends BaseAdapter {
             );
             ((TextView) view.findViewById(R.id.tvElementGroup)).setTextColor(
                     context.getResources().getColor(R.color.chooseFaculty)
-            );
-        }
-
-        if (selectedPosition != null && index == selectedPosition) {
-            ((TextView) view.findViewById(R.id.tvElementFIO)).setTextColor(
-                    context.getResources().getColor(R.color.teal_200)
             );
         }
 

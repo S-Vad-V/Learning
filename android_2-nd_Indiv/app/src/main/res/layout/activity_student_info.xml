@@ -8,13 +8,12 @@
     tools:context=".StudentInfoActivity">
 
     <EditText
-        android:id="@+id/editStudentFio"
+        android:id="@+id/editAsiFIO"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:onClick="updateStudentInfo"
-        tools:ignore="SpeakableTextPresentCheck" />
+        android:text="Name" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,25 +21,21 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/editStudentGroup"
+            android:id="@+id/editAsiFaculty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:ems="10"
             android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:onClick="updateStudentInfo"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:text="Name" />
 
         <EditText
-            android:id="@+id/editStudentFaculty"
+            android:id="@+id/editAsiGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:onClick="updateStudentInfo"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            android:inputType="number" />
 
     </LinearLayout>
 
@@ -54,6 +49,17 @@
             android:id="@+id/lvAsiSubjects"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"/>
     </LinearLayout>
 
 </LinearLayout>

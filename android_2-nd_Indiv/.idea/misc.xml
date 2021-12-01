@@ -3,13 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Learning/android_secondIndv/app/src/main/res/layout/activity_student_info.xml" value="0.2694746376811594" />
-        <entry key="..\:/Learning/android_secondIndv/app/src/main/res/layout/main_activity.xml" value="0.2694746376811594" />
-        <entry key="..\:/Learning/android_secondIndv/app/src/main/res/layout/student.xml" value="0.2694746376811594" />
-        <entry key="..\:/Learning/android_secondIndv/app/src/main/res/layout/student_element.xml" value="0.2694746376811594" />
-        <entry key="..\:/Learning/android_secondIndv/app/src/main/res/layout/subject_element.xml" value="0.2694746376811594" />
-        <entry key="..\:/Learning/android_secondIndv/app/src/main/res/layout/subject_input.xml" value="0.20520833333333333" />
-        <entry key="..\:/Learning/android_secondIndv/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_2-nd_Indiv/app/src/main/res/layout/activity_student_info.xml" value="0.2" />
+        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_2-nd_Indiv/app/src/main/res/layout/main_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_2-nd_Indiv/app/src/main/res/menu/popup_menu.xml" value="0.136" />
+        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_2-nd_Indiv/app/src/main/res/menu/subject_menu.xml" value="0.1203125" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_collection/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_collection/app/src/main/res/layout/activity_student_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_collection/app/src/main/res/layout/main_activity.xml" value="0.264" />
@@ -18,11 +15,6 @@
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_collection/app/src/main/res/layout/subject_input.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_collection/app/src/main/res/menu/main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_collection/app/src/main/res/menu/popup_menu.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_secondIndv/app/src/main/res/layout/activity_student_info.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_secondIndv/app/src/main/res/layout/main_activity.xml" value="0.161231884057971" />
-        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_secondIndv/app/src/main/res/layout/subject_element.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_secondIndv/app/src/main/res/menu/popup_menu.xml" value="0.2" />
-        <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_secondIndv/app/src/main/res/menu/subject_menu.xml" value="0.13020833333333334" />
       </map>
     </option>
   </component>
