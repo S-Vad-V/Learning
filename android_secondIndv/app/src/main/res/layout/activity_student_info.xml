@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
+        android:onClick="updateStudentInfo"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <LinearLayout
@@ -28,6 +29,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:onClick="updateStudentInfo"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <EditText
@@ -37,6 +39,7 @@
             android:layout_weight="2"
             android:ems="10"
             android:inputType="textPersonName"
+            android:onClick="updateStudentInfo"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     </LinearLayout>

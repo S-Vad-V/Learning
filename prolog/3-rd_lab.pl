@@ -1,5 +1,6 @@
 # 7 variant
 if(A,B,C):-A,B;\+A,C.
+
 max(X,Y,Z):- (X>Y, Z is X; X<Y, Z is Y).
 
 max(X,Y,U,Z):-(X>Y, X>U, Z is X; (Y>X, Y>U, Z is Y; U>X, U>Y, Z is U)).
@@ -9,7 +10,7 @@ fact_up(N1, N, X):- if(N1 < N, (fact_up(N1 + 1, N, X1), X is X1*N1), X is N1).
 
 
 fact_down(1,1).
-fact_down(N,X):- C is N-1, fact_down(C, X1), X=X1*N.
+fact_down(N,X):- C is N-1, fact_down(C, X1), X is X1*N.
 
 
 fib_up(1,1).
@@ -50,7 +51,7 @@ nod(X,Y,Z):-if(X=Y,Z is X,
                 (max(X,Y,X1),min(X,Y,X2),N is X1-X2,nod(N,X2,X4),Z is X4)).
 
 koldel(_,0,0):-!.
-koldel(X,L,K):-X mod L=:=0,L1 is L-1,koldel(X,L1,K1),K is K1+1;X mod L=\=0,
+koldel(X,L,K):-X mod L=:=0,write(L),nl,L1 is L-1,koldel(X,L1,K1),K is K1+1;X mod L=\=0,
     L1 is L-1,koldel(X,L1,K1),K is K1.
 kol(X,Y):-koldel(X,X,Y).
 

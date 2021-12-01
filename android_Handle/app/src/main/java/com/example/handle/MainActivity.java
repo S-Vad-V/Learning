@@ -1,5 +1,6 @@
 package com.example.handle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.sql.Time;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,11 +36,23 @@ public class MainActivity extends AppCompatActivity {
     final int STATUS_DOWNLOAD_NONE = 6; // нет файлов для загрузки
     Handler h2;
     ProgressBar pbDownload;
+    Button btnConnectOther;
+
+    Handler hh1;
+    Handler.Callback hc = new Handler.Callback() {
+        @Override
+        public boolean handleMessage(@NonNull Message message) {
+            Log.d(LOG_TAG, "what = " + message.what);
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        hh1 = new Handler(hc);
 
         tvInfo = (TextView) findViewById(R.id.tvInfo);
         btnStart = (Button) findViewById(R.id.btnStart);
@@ -73,17 +88,18 @@ public class MainActivity extends AppCompatActivity {
         };
         h1.sendEmptyMessage(STATUS_NONE);
 
-        pbDownload = findViewById(R.id.pbDownload);
+        btnConnectOther = findViewById(R.id.btnConnectOther);
+        pbDownload = findViewById(R.id.pbDowload);
         h2 = new Handler(Looper.getMainLooper()) {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case STATUS_NONE:
-                        btnConnect.setEnabled(true);
+                        btnConnectOther.setEnabled(true);
                         tvStatus.setText("Not connected");
                         pbDownload.setVisibility(View.GONE);
                         break;
                     case STATUS_CONNECTING:
-                        btnConnect.setEnabled(false);
+                        btnConnectOther.setEnabled(false);
                         tvStatus.setText("Connectiong");
                         break;
                     case STATUS_CONNECTED:
@@ -113,8 +129,53 @@ public class MainActivity extends AppCompatActivity {
         h2.sendEmptyMessage(STATUS_NONE);
     }
 
+    private byte[] dowloadOtherFile() throws InterruptedException {
+        TimeUnit.SECONDS.sleep(2);
+        return new byte[1024];
+    }
+
+    private void saveFile(byte[] file) {
+
+    }
+
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btnConnectOther:
+                Thread t2 = new Thread(new Runnable() {
+                    Message msg;
+                    byte[] file;
+                    Random rand = new Random();
+
+                    @Override
+                    public void run() {
+                        try {
+                            h2.sendEmptyMessage(STATUS_CONNECTING);
+
+                            TimeUnit.SECONDS.sleep(2);
+                            int filesCount = rand.nextInt(15);
+                            if (filesCount == 0) {
+                                h2.sendEmptyMessage(STATUS_DOWNLOAD_NONE);
+                                TimeUnit.MILLISECONDS.sleep(1500);
+                                h2.sendEmptyMessage(STATUS_NONE);
+                                return;
+                            }
+                            msg = h2.obtainMessage(STATUS_DOWNLOAD_START, filesCount, 0);
+                            h2.sendMessage(msg);
+                            for (int i = 1; i <= filesCount; i++) {
+                                file = dowloadOtherFile();
+                                msg = h2.obtainMessage(STATUS_DOWNLOAD_FILE, i, filesCount - i, file);
+                                h2.sendMessage(msg);
+                            }
+                            h2.sendEmptyMessage(STATUS_DOWNLOAD_END);
+                            TimeUnit.MILLISECONDS.sleep(1500);
+                            h2.sendEmptyMessage(STATUS_NONE);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                t2.start();
+                break;
             case R.id.btnStart:
 //                for (int i = 0; i < 10; i++) {
 //                    dowloadFile();
@@ -165,5 +226,18 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onClick1(View view) {
+        hh1.sendEmptyMessageAtTime(999, 29000);
+        hh1.sendEmptyMessageDelayed(1, 1000);
+        hh1.sendEmptyMessageDelayed(2, 2000);
+        hh1.sendEmptyMessageDelayed(3, 3000);
+        hh1.sendEmptyMessageDelayed(2, 4000);
+        hh1.sendEmptyMessageDelayed(5, 5000);
+        hh1.sendEmptyMessageDelayed(2, 6000);
+        hh1.sendEmptyMessageDelayed(7, 7000);
+        hh1.sendEmptyMessageDelayed(2, 8000);
+        hh1.sendEmptyMessageDelayed(9, 9000);
     }
 }

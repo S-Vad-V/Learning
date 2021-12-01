@@ -28,6 +28,7 @@ public class StudentInfoActivity extends AppCompatActivity {
     private SubjectListAdapter subjectListAdapter;
     private Student student;
     private Integer selectedSubject = null;
+    private Integer position;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +82,7 @@ public class StudentInfoActivity extends AppCompatActivity {
             subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
             ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
         }
+        this.position = getIntent().getIntExtra("position", -1);
 
         ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -210,8 +212,9 @@ public class StudentInfoActivity extends AppCompatActivity {
             inputDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    student.addSubject(new Subject(name.getText().toString(),
-                            Integer.parseInt(mark.getSelectedItem().toString())));
+                    if (!name.getText().toString().isEmpty())
+                        student.addSubject(new Subject(name.getText().toString(),
+                                Integer.parseInt(mark.getSelectedItem().toString())));
                     subjectListAdapter.notifyDataSetChanged();
                 }
             }).setNegativeButton("Cancel", null);
@@ -221,7 +224,14 @@ public class StudentInfoActivity extends AppCompatActivity {
 
     public void saveState(View view) {
         Intent intent = new Intent();
+        if (student == null)
+            student = Student.builder()
+                    .fio(((EditText) findViewById(R.id.editFIO)).getText().toString())
+                    .facultet(((EditText) findViewById(R.id.editFaculty)).getText().toString())
+                    .group(((EditText) findViewById(R.id.editStudentGroup)).getText().toString())
+                    .build();
         intent.putExtra("student", student);
+        intent.putExtra("position", position);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -232,6 +242,14 @@ public class StudentInfoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        String fio = ((EditText) findViewById(R.id.editStudentFio)).getText().toString();
+        String faculty = ((EditText) findViewById(R.id.editStudentFaculty)).getText().toString();
+        String group = ((EditText) findViewById(R.id.editStudentGroup)).getText().toString();
+        if (fio.isEmpty() || faculty.isEmpty() || group.isEmpty()) {
+            exit(null);
+        }
+
+
         AlertDialog.Builder quitDialog = new AlertDialog.Builder(this);
         quitDialog.setTitle("Save changes?");
         quitDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -246,5 +264,11 @@ public class StudentInfoActivity extends AppCompatActivity {
             }
         });
         quitDialog.show();
+    }
+
+    public void updateStudentInfo(View view) {
+        student.setFio(((EditText) findViewById(R.id.editStudentFio)).getText().toString());
+        student.setFacultet(((EditText) findViewById(R.id.editStudentFaculty)).getText().toString());
+        student.setGroup(((EditText) findViewById(R.id.editStudentGroup)).getText().toString());
     }
 }

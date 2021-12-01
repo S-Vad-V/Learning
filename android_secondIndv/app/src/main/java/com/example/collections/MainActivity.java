@@ -56,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        findViewById(R.id.llInput).setVisibility(
-                findViewById(R.id.bAddStudent).getVisibility()
-        );
         list = new ArrayList<>();
         studentList = new ArrayList<>();
 
@@ -83,14 +80,17 @@ public class MainActivity extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         Intent intent = result.getData();
                         Student student = intent.getParcelableExtra("student");
-                        studentList.set(position, student);
+                        position = intent.getIntExtra("position", -1);
+                        if (position == -1) {
+                            studentList.add(student);
+                        } else studentList.set(position, student);
+
                         Toast.makeText(getApplicationContext(),
                                 "Student :" + student.toString() + "\n Success saved",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
         );
-        position = null;
     }
 
     @Override
@@ -139,10 +139,6 @@ public class MainActivity extends AppCompatActivity {
         studentListAdapter = new StudentListAdapter(studentList, this);
         listView.setAdapter(studentListAdapter);
 
-        findViewById(R.id.llInput).setVisibility(View.VISIBLE);
-        findViewById(R.id.bAddStudent).setVisibility(View.VISIBLE);
-        findViewById(R.id.bCreateStudentList).setVisibility(View.GONE);
-
         AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -165,9 +161,12 @@ public class MainActivity extends AppCompatActivity {
 //                intent.putExtra("student", studentList.get(i));
 //                position = i;
 //                activityResultLauncher.launch(intent);
-
-                studentListAdapter.setSelectedPosition(i);
-                position = i;
+                if (position == i) {
+                    position = null;
+                } else {
+                    position = i;
+                }
+                studentListAdapter.setSelectedPosition(position);
                 studentListAdapter.notifyDataSetChanged();
             }
         };
@@ -175,7 +174,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addStudentIntent() {
+        position = null;
         Intent intent = new Intent(MainActivity.this, StudentInfoActivity.class);
+        intent.putExtra("position", -1);
         activityResultLauncher.launch(intent);
     }
 
@@ -189,35 +190,36 @@ public class MainActivity extends AppCompatActivity {
         if (position != null) {
             Intent intent = new Intent(MainActivity.this, StudentInfoActivity.class);
             intent.putExtra("student", studentList.get(position));
+            intent.putExtra("position", position);
             activityResultLauncher.launch(intent);
         }
     }
 
-    public void addStudent(View view) {
-        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editFIO)).getText().toString())) {
-            ((EditText) findViewById(R.id.editFIO)).setError("Enter your FIO");
-            return;
-        }
-        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editGroup)).getText().toString())) {
-            ((EditText) findViewById(R.id.editGroup)).setError("Enter your Group");
-            return;
-        }
-        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editFaculty)).getText().toString())) {
-            ((EditText) findViewById(R.id.editFaculty)).setError("Enter your Faculty");
-            return;
-        }
-
-        studentList.add(Student.builder()
-                .fio(((EditText) findViewById(R.id.editFIO)).getText().toString())
-                .facultet(((EditText) findViewById(R.id.editFaculty)).getText().toString())
-                .group(((EditText) findViewById(R.id.editGroup)).getText().toString())
-                .build());
-
-        ((EditText) findViewById(R.id.editFIO)).setText("");
-        ((EditText) findViewById(R.id.editFaculty)).setText("");
-        ((EditText) findViewById(R.id.editGroup)).setText("");
-        studentListAdapter.notifyDataSetChanged();
-    }
+//    public void addStudent(View view) {
+//        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editFIO)).getText().toString())) {
+//            ((EditText) findViewById(R.id.editFIO)).setError("Enter your FIO");
+//            return;
+//        }
+//        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editGroup)).getText().toString())) {
+//            ((EditText) findViewById(R.id.editGroup)).setError("Enter your Group");
+//            return;
+//        }
+//        if (TextUtils.isEmpty(((EditText) findViewById(R.id.editFaculty)).getText().toString())) {
+//            ((EditText) findViewById(R.id.editFaculty)).setError("Enter your Faculty");
+//            return;
+//        }
+//
+//        studentList.add(Student.builder()
+//                .fio(((EditText) findViewById(R.id.editFIO)).getText().toString())
+//                .facultet(((EditText) findViewById(R.id.editFaculty)).getText().toString())
+//                .group(((EditText) findViewById(R.id.editGroup)).getText().toString())
+//                .build());
+//
+//        ((EditText) findViewById(R.id.editFIO)).setText("");
+//        ((EditText) findViewById(R.id.editFaculty)).setText("");
+//        ((EditText) findViewById(R.id.editGroup)).setText("");
+//        studentListAdapter.notifyDataSetChanged();
+//    }
 
     private boolean checkField(EditText editText) {
         boolean isEmpty = TextUtils.isEmpty(editText.getText().toString());
