@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/addSubject"
-        android:title="add Subject" />
+        android:id="@+id/miAddSubject"
+        android:title="Add Subject" />
+    <item
+        android:id="@+id/miUpdateSubject"
+        android:title="Update Subject" />
 </menu>

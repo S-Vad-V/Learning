@@ -23,6 +23,7 @@ public class Student implements Parcelable {
     }
 
     public Student() {
+        subjects = new ArrayList<>();
     }
 
     @Override

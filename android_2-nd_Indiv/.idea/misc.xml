@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Learning/android_2-nd_Indiv/app/src/main/res/layout/activity_student_info.xml" value="0.36666666666666664" />
+        <entry key="..\:/Learning/android_2-nd_Indiv/app/src/main/res/layout/main_activity.xml" value="0.33" />
+        <entry key="..\:/Learning/android_2-nd_Indiv/app/src/main/res/layout/subject_element.xml" value="0.36666666666666664" />
+        <entry key="..\:/Learning/android_2-nd_Indiv/app/src/main/res/layout/subject_input.xml" value="0.36666666666666664" />
+        <entry key="..\:/Learning/android_2-nd_Indiv/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Learning/android_2-nd_Indiv/app/src/main/res/menu/subject_menu.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_2-nd_Indiv/app/src/main/res/layout/activity_student_info.xml" value="0.2" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_2-nd_Indiv/app/src/main/res/layout/main_activity.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/storchak_vv/Desktop/Learning/android_2-nd_Indiv/app/src/main/res/menu/popup_menu.xml" value="0.136" />

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,18 +27,26 @@ import com.example.collections.models.Subject;
 public class StudentInfoActivity extends AppCompatActivity {
     private SubjectListAdapter subjectListAdapter;
     private Student student;
+    private Integer selectedSubject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_info);
+        selectedSubject = null;
 
         this.student = getIntent().getParcelableExtra("student");
-        ((TextView) findViewById(R.id.editAsiFIO)).setText(student.getFio());
-        ((TextView) findViewById(R.id.editAsiFaculty)).setText(student.getFacultet());
-        ((TextView) findViewById(R.id.editAsiGroup)).setText(student.getGroup());
+        if (student != null) {
+            ((TextView) findViewById(R.id.editAsiFIO)).setText(student.getFio());
+            ((TextView) findViewById(R.id.editAsiFaculty)).setText(student.getFacultet());
+            ((TextView) findViewById(R.id.editAsiGroup)).setText(student.getGroup());
 
-        subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
+            subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
+        } else {
+            student = new Student();
+            subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
+
+        }
         ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
 
         ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -51,7 +60,13 @@ public class StudentInfoActivity extends AppCompatActivity {
         ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                showPopupMenu(view.findViewById(R.id.tvSubjectMark), position);
+                if (selectedSubject != null && selectedSubject == position) {
+                    selectedSubject = null;
+                } else {
+                    selectedSubject = position;
+                }
+                subjectListAdapter.setSelectedSubjectPosition(selectedSubject);
+                subjectListAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -82,13 +97,55 @@ public class StudentInfoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.addSubject: {
+            case R.id.miAddSubject: {
                 addSubject(null);
+                return true;
             }
+            case R.id.miUpdateSubject: {
+                if (selectedSubject != null) {
+                    updateSubject();
+                }
+                return true;
+            }
+
             default: {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateSubject() {
+        if (selectedSubject != null) {
+            AlertDialog.Builder inputDialog = new AlertDialog.Builder(StudentInfoActivity.this);
+            inputDialog.setTitle("Subject Title");
+            inputDialog.setCancelable(false);
+            View inputView = (LinearLayout) getLayoutInflater().inflate(R.layout.subject_input, null);
+            inputDialog.setView(inputView);
+            final EditText name = inputView.findViewById(R.id.editDialogSubjectName);
+            final Spinner mark = inputView.findViewById(R.id.sDialogMark);
+            ((EditText) inputView.findViewById(R.id.editDialogSubjectName)).setText(student.getSubjects().get(selectedSubject).getName());
+            ((Spinner) inputView.findViewById(R.id.sDialogMark))
+                    .setSelection(getIndex(mark, student.getSubjects().get(selectedSubject).getMark().toString()));
+
+            inputDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    student.getSubjects().set(selectedSubject, new Subject(name.getText().toString(),
+                            Integer.parseInt(mark.getSelectedItem().toString())));
+                    subjectListAdapter.notifyDataSetChanged();
+                }
+            }).setNegativeButton("Cancel", null);
+            inputDialog.show();
+        }
+    }
+
+    private int getIndex(Spinner spinner, String myString) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     public void showPopupMenu(View view, int position) {
@@ -166,21 +223,51 @@ public class StudentInfoActivity extends AppCompatActivity {
         finish();
     }
 
+    private void updateStudentState() {
+        student.setFio(((TextView) findViewById(R.id.editAsiFIO)).getText().toString());
+        student.setFacultet(((TextView) findViewById(R.id.editAsiFaculty)).getText().toString());
+        student.setGroup(((TextView) findViewById(R.id.editAsiGroup)).getText().toString());
+    }
+
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder quitDialog = new AlertDialog.Builder(this);
-        quitDialog.setTitle("Save changes?");
-        quitDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                saveState(null);
-            }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                exit(null);
-            }
-        });
-        quitDialog.show();
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        try {
+            AlertDialog.Builder quitDialog = new AlertDialog.Builder(this);
+            quitDialog.setTitle("Save changes?");
+            quitDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    updateStudentState();
+                    if (student.getFacultet().isEmpty() || student.getFio().isEmpty() || student.getGroup().isEmpty()) {
+                        AlertDialog.Builder inputAllFields = new AlertDialog.Builder(quitDialog.getContext());
+                        inputAllFields.setTitle("Pls input all Fields");
+                        inputAllFields.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                return;
+                            }
+                        });
+                        inputAllFields.show();
+                        return;
+
+                    }
+                    saveState(null);
+                }
+            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    exit(null);
+                }
+            });
+            quitDialog.show();
+        } catch (RuntimeException e) {
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

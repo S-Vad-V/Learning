@@ -25,6 +25,14 @@ public class SubjectListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private Integer selectedSubjectPosition;
 
+    public void setSelectedSubjectPosition(Integer selectedSubjectPosition) {
+        if (selectedSubjectPosition == this.selectedSubjectPosition) {
+            this.selectedSubjectPosition = null;
+        } else {
+            this.selectedSubjectPosition = selectedSubjectPosition;
+        }
+    }
+
     public SubjectListAdapter(List<Subject> subjectList, Context context) {
         this.subjectList = subjectList;
         this.selectedSubjectPosition = null;
@@ -56,12 +64,12 @@ public class SubjectListAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.tvSubjectName)).setText(subjectList.get(index).getName());
         ((TextView) view.findViewById(R.id.tvSubjectMark)).setText(subjectList.get(index).getMark().toString());
 
-        ((TextView) view.findViewById(R.id.tvSubjectMark)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+//        ((TextView) view.findViewById(R.id.tvSubjectMark)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
         if (selectedSubjectPosition != null) {
             if (index == selectedSubjectPosition) {
@@ -71,7 +79,6 @@ public class SubjectListAdapter extends BaseAdapter {
                         context.getResources().getColor(R.color.chooseFaculty));
             }
         }
-
         return view;
     }
 }

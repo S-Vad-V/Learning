@@ -1,0 +1,29 @@
+com/example/collections/models/Subject.java
+ com.example.collections.models.Subject
+ com.example.collections.models.Subject$1
+com/example/collections/models/Student.java
+ com.example.collections.models.Student
+ com.example.collections.models.Student$1
+ com.example.collections.models.Student$StudentBuilder
+com/example/collections/BuildConfig.java
+ com.example.collections.BuildConfig
+com/example/collections/adapters/StudentListAdapter.java
+ com.example.collections.adapters.StudentListAdapter
+com/example/collections/adapters/SubjectListAdapter.java
+ com.example.collections.adapters.SubjectListAdapter
+ com.example.collections.adapters.SubjectListAdapter$1
+com/example/collections/MainActivity.java
+ com.example.collections.MainActivity
+ com.example.collections.MainActivity$1
+ com.example.collections.MainActivity$2
+com/example/collections/StudentInfoActivity.java
+ com.example.collections.StudentInfoActivity
+ com.example.collections.StudentInfoActivity$1
+ com.example.collections.StudentInfoActivity$2
+ com.example.collections.StudentInfoActivity$2$1
+ com.example.collections.StudentInfoActivity$2$2
+ com.example.collections.StudentInfoActivity$3
+ com.example.collections.StudentInfoActivity$4
+ com.example.collections.StudentInfoActivity$5
+ com.example.collections.StudentInfoActivity$6
+ com.example.collections.StudentInfoActivity$7
