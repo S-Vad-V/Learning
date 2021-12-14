@@ -6,17 +6,14 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Builder
 public class Student implements Parcelable {
     private String fio;
     private String facultet;
     private String group;
-    private List<Subject> subjects;
+    private List<Lessons> lessons;
 
     public String getFio() {
         return fio;
@@ -31,7 +28,7 @@ public class Student implements Parcelable {
                 "fio='" + fio + '\'' +
                 ", facultet='" + facultet + '\'' +
                 ", group='" + group + '\'' +
-                ", subjects=" + subjects +
+                ", subjects=" + lessons +
                 '}';
     }
 
@@ -55,26 +52,26 @@ public class Student implements Parcelable {
         this.group = group;
     }
 
-    public List<Subject> getSubjects() {
-        return subjects;
+    public List<Lessons> getLessons() {
+        return lessons;
     }
 
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
+    public void setLessons(List<Lessons> lessons) {
+        this.lessons = lessons;
     }
 
-    public Student(String fio, String facultet, String group, List<Subject> subjects) {
+    public Student(String fio, String facultet, String group, List<Lessons> lessons) {
         this.fio = fio;
         this.facultet = facultet;
         this.group = group;
-        this.subjects = new ArrayList<>();
+        this.lessons = new ArrayList<>();
     }
 
     protected Student(Parcel in) {
         fio = in.readString();
         facultet = in.readString();
         group = in.readString();
-        subjects = in.createTypedArrayList(Subject.CREATOR);
+        lessons = in.createTypedArrayList(Lessons.CREATOR);
     }
 
     public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -99,11 +96,11 @@ public class Student implements Parcelable {
         parcel.writeString(fio);
         parcel.writeString(facultet);
         parcel.writeString(group);
-        parcel.writeTypedList(subjects);
+        parcel.writeTypedList(lessons);
     }
 
-    public int addSubject(Subject subject) {
-        subjects.add(subject);
-        return subjects.size();
+    public int addSubject(Lessons lessons) {
+        this.lessons.add(lessons);
+        return this.lessons.size();
     }
 }

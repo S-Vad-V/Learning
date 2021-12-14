@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.collections.R;
-import com.example.collections.models.Subject;
+import com.example.collections.models.Lessons;
 
 import java.util.List;
 
@@ -19,25 +19,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectListAdapter extends BaseAdapter {
-    private List<Subject> subjectList;
+public class LessonsListAdapter extends BaseAdapter {
+    private List<Lessons> lessonsList;
     private Context context;
     private LayoutInflater layoutInflater;
 
-    public SubjectListAdapter(List<Subject> subjectList, Context context) {
-        this.subjectList = subjectList;
+    public LessonsListAdapter(List<Lessons> lessonsList, Context context) {
+        this.lessonsList = lessonsList;
         this.context = context;
         this.layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return subjectList.size();
+        return lessonsList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return subjectList.get(i);
+        return lessonsList.get(i);
     }
 
     @Override
@@ -48,11 +48,11 @@ public class SubjectListAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         view = layoutInflater.inflate(R.layout.subject_element, viewGroup, false);
-        if (subjectList.isEmpty())
+        if (lessonsList.isEmpty())
             return view;
 
-        ((TextView) view.findViewById(R.id.tvSubjectName)).setText(subjectList.get(index).getName());
-        ((TextView) view.findViewById(R.id.tvSubjectMark)).setText(subjectList.get(index).getMark().toString());
+        ((TextView) view.findViewById(R.id.tvSubjectName)).setText(lessonsList.get(index).getName());
+        ((TextView) view.findViewById(R.id.tvSubjectMark)).setText(lessonsList.get(index).getMark().toString());
 
         ((TextView) view.findViewById(R.id.tvSubjectMark)).setOnClickListener(new View.OnClickListener() {
             @Override

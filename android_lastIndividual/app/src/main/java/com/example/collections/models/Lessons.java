@@ -3,16 +3,12 @@ package com.example.collections.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-
-public class Subject implements Parcelable {
+public class Lessons implements Parcelable {
     private String name;
     private Integer mark;
 
-    public Subject(String name, Integer mark) {
+    public Lessons(String name, Integer mark) {
         this.name = name;
         this.mark = mark;
     }
@@ -33,7 +29,7 @@ public class Subject implements Parcelable {
         this.mark = mark;
     }
 
-    protected Subject(Parcel in) {
+    protected Lessons(Parcel in) {
         name = in.readString();
         if (in.readByte() == 0) {
             mark = null;
@@ -42,15 +38,15 @@ public class Subject implements Parcelable {
         }
     }
 
-    public static final Creator<Subject> CREATOR = new Creator<Subject>() {
+    public static final Creator<Lessons> CREATOR = new Creator<Lessons>() {
         @Override
-        public Subject createFromParcel(Parcel in) {
-            return new Subject(in);
+        public Lessons createFromParcel(Parcel in) {
+            return new Lessons(in);
         }
 
         @Override
-        public Subject[] newArray(int size) {
-            return new Subject[size];
+        public Lessons[] newArray(int size) {
+            return new Lessons[size];
         }
     };
 

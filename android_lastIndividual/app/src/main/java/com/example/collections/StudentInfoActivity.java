@@ -16,17 +16,13 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.collections.adapters.SubjectListAdapter;
+import com.example.collections.adapters.LessonsListAdapter;
 import com.example.collections.models.Student;
-import com.example.collections.models.Subject;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.collections.models.Lessons;
 
 
 public class StudentInfoActivity extends AppCompatActivity {
-    private SubjectListAdapter subjectListAdapter;
+    private LessonsListAdapter lessonsListAdapter;
     private Student student;
 
     @Override
@@ -48,8 +44,8 @@ public class StudentInfoActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tvAsiFaculty)).setText(student.getFacultet());
         ((TextView) findViewById(R.id.tvAsiGroup)).setText(student.getGroup());
 
-        subjectListAdapter = new SubjectListAdapter(student.getSubjects(), StudentInfoActivity.this);
-        ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
+        lessonsListAdapter = new LessonsListAdapter(student.getLessons(), StudentInfoActivity.this);
+        ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(lessonsListAdapter);
 
         ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -59,8 +55,8 @@ public class StudentInfoActivity extends AppCompatActivity {
                 deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        student.getSubjects().remove(position);
-                        subjectListAdapter.notifyDataSetChanged();
+                        student.getLessons().remove(position);
+                        lessonsListAdapter.notifyDataSetChanged();
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -111,9 +107,9 @@ public class StudentInfoActivity extends AppCompatActivity {
                     default:
                         return false;
                 }
-                if ((student != null) && (position < student.getSubjects().size())) {
-                    student.getSubjects().get(position).setMark(mark);
-                    subjectListAdapter.notifyDataSetChanged();
+                if ((student != null) && (position < student.getLessons().size())) {
+                    student.getLessons().get(position).setMark(mark);
+                    lessonsListAdapter.notifyDataSetChanged();
                 }
                 return true;
             }
@@ -133,9 +129,9 @@ public class StudentInfoActivity extends AppCompatActivity {
         inputDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                student.addSubject(new Subject(name.getText().toString(),
+                student.addSubject(new Lessons(name.getText().toString(),
                         Integer.parseInt(mark.getSelectedItem().toString())));
-                subjectListAdapter.notifyDataSetChanged();
+                lessonsListAdapter.notifyDataSetChanged();
             }
         }).setNegativeButton("Cancel", null);
         inputDialog.show();
