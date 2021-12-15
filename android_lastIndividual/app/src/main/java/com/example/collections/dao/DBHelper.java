@@ -104,7 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<Student> result = new ArrayList<>();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from students", null);
+        Cursor cursor = db.rawQuery("select * from students;", null);
         if (cursor.moveToFirst()) {
             do {
                 result.add(Student.builder()
@@ -113,11 +113,42 @@ public class DBHelper extends SQLiteOpenHelper {
                         .facultet(cursor.getString(2))
                         .group(cursor.getString(3))
                         .phone(cursor.getString(4))
-                        .lessons(getAllStudentLessons(cursor.getString(0)))
                         .build());
             } while (cursor.moveToNext());
         }
-        db.close();
+        return result;
+    }
+
+    public List<Lessons> getAllLessons() {
+        List<Lessons> result = new ArrayList<>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from lessons;", null);
+        if (cursor.moveToFirst()) {
+            do {
+                result.add(Lessons.builder()
+                        .id(cursor.getString(0))
+                        .name(cursor.getString(1))
+                        .build());
+            } while (cursor.moveToNext());
+        }
+        return result;
+    }
+
+    public List<String> getStudentLessons() {
+        List<String> result = new ArrayList<>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from student_lessons;", null);
+        if (cursor.moveToFirst()) {
+            do {
+                result.add(String.format(" student_id: %s \n lesson_id: %s\n lesson_mark: %s",
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2)
+                ));
+            } while (cursor.moveToNext());
+        }
         return result;
     }
 
@@ -132,23 +163,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // Inserting Row
         db.insert(TABLE_STUDENT, null, values);
+    }
 
-        // Closing database connection
-        db.close();
+    public void deleteStudent(String student_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        List<Student> list1 = getAllStudents();
+        db.delete(TABLE_STUDENT, "student_id = ?", new String[]{String.valueOf(student_id)});
+        List<Student> list = getAllStudents();
     }
 
 
-    public List<Lessons> getAllStudentLessons(String student_id) {
+    public List<Lessons> getAllStudentLessonsByStudentId(String student_id) {
         List<Lessons> result = new ArrayList<>();
 
         String query = String.format("select lessons.lesson_id, lesson_title, lesson_mark\n" +
-                "from lessons,\n" +
-                "     student_lessons\n" +
-                "where lessons.lesson_id in (select lesson_id\n" +
-                "                            from student_lessons\n" +
-                "                            where student_id = %s)\n" +
-                "  and student_lessons.student_id = %s\n" +
-                "  and lessons.lesson_id = student_lessons.lesson_id;", student_id, student_id);
+                        "from lessons,\n" +
+                        "     student_lessons\n" +
+                        "where lessons.lesson_id in (select lesson_id\n" +
+                        "                            from student_lessons\n" +
+                        "                            where student_id = %s)\n" +
+                        "  and student_lessons.student_id = %s\n" +
+                        "  and lessons.lesson_id = student_lessons.lesson_id;",
+                student_id,
+                student_id
+        );
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -161,7 +199,6 @@ public class DBHelper extends SQLiteOpenHelper {
                         .build());
             } while (cursor.moveToNext());
         }
-        db.close();
         return result;
     }
 
@@ -197,36 +234,91 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         // Closing database connection
-        db.close();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void updateStudent(Student student) {
+    public void saveStudent(Student student) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        String updateStudentQuery = String.format("insert or\n" +
-                        "replace into students (student_id, student_fio, student_faculty, student_group, student_phone)\n" +
-                        "values ('%s', '%s','%s','%s','%s')",
-                student.getId(),
-                student.getFio(),
-                student.getFacultet(),
-                student.getGroup(),
-                student.getPhone()
-        );
+        String updateStudentQuery;
+        if (student.getId() != null) {
+            updateStudentQuery = String.format("insert or\n" +
+                            "replace into students (student_id, student_fio, student_faculty, student_group, student_phone)\n" +
+                            "values ('%s', '%s','%s','%s','%s');",
+                    student.getId(),
+                    student.getFio(),
+                    student.getFacultet(),
+                    student.getGroup(),
+                    student.getPhone()
+            );
+        } else {
+            updateStudentQuery = String.format("insert or\n" +
+                            "replace into students (student_fio, student_faculty, student_group, student_phone)\n" +
+                            "values ('%s','%s','%s','%s');",
+                    student.getFio(),
+                    student.getFacultet(),
+                    student.getGroup(),
+                    student.getPhone()
+            );
+        }
 
         db.execSQL(updateStudentQuery);
 
+        List<Student> studentList = getAllStudents();
+
+        String deleteStudentLessonsQuery = String.format("delete from student_lessons\n" +
+                        "where student_id = '%s';",
+                student.getId()
+        );
+        db.execSQL(deleteStudentLessonsQuery);
         if (student.getLessons() != null) {
             student.getLessons().forEach(lesson -> {
-                String updateLessonsQuery = String.format("insert or\n" +
-                                "replace into lessons (lesson_id, lesson_title)\n" +
-                                "values ('%s', '%s')",
-                        lesson.getId(),
-                        lesson.getName());
-                db.execSQL(updateStudentQuery);
-                String updateStudentLessonsQuery = "";
-            });
+                List<Lessons> lessons = getAllLessons();
+                List<String> studentLessons = getStudentLessons();
+                String saveLessonQuery;
+                String updateStudentLessonsQuery;
+                if (lesson.getId() != null) {
+                    saveLessonQuery = String.format("insert or\n" +
+                                    "replace into lessons (lesson_id, lesson_title)\n" +
+                                    "values ('%s', '%s');",
+                            lesson.getId(),
+                            lesson.getName());
+                    updateStudentLessonsQuery = String.format("insert or\n" +
+                                    "replace into student_lessons (student_id, lesson_id, lesson_mark)\n" +
+                                    "values ('%s', '%s', '%s');",
+                            student.getId(),
+                            lesson.getId(),
+                            lesson.getMark());
+                } else {
+                    saveLessonQuery = String.format("insert or\n" +
+                                    "replace into lessons (lesson_title)\n" +
+                                    "values ('%s');",
+                            lesson.getName());
+                    db.execSQL(saveLessonQuery);
+                    String query = String.format("select * from lessons\n" +
+                            "where lesson_title = '%s'", lesson.getName());
+                    Lessons lastLesson = null;
+                    Cursor cursor = db.rawQuery(query, null);
+                    if (cursor.moveToFirst()) {
+                        do {
+                            lastLesson = Lessons.builder()
+                                    .id(cursor.getString(0))
+                                    .name(cursor.getString(1))
+                                    .build();
+                        } while (cursor.moveToNext());
+                    }
 
+                    updateStudentLessonsQuery = String.format("insert or\n" +
+                                    "replace into student_lessons (student_id, lesson_id, lesson_mark)\n" +
+                                    "values ('%s', '%s', '%s');",
+                            student.getId(),
+                            lastLesson.getId(),
+                            lesson.getMark());
+                }
+                db.execSQL(saveLessonQuery);
+                db.execSQL(updateStudentLessonsQuery);
+                studentLessons = getStudentLessons();
+                System.out.println(studentLessons);
+            });
         }
     }
 

@@ -73,9 +73,11 @@ public class Student implements Parcelable {
     }
 
     protected Student(Parcel in) {
+        id = in.readString();
         fio = in.readString();
         facultet = in.readString();
         group = in.readString();
+        phone = in.readString();
         lessons = in.createTypedArrayList(Lessons.CREATOR);
     }
 
@@ -98,9 +100,11 @@ public class Student implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
         parcel.writeString(fio);
         parcel.writeString(facultet);
         parcel.writeString(group);
+        parcel.writeString(phone);
         parcel.writeTypedList(lessons);
     }
 

@@ -2,8 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/miAbout"
-        android:title="About program" />
+        android:id="@+id/miUpdateStudent"
+        android:title="Update Student" />
+    <item
+        android:id="@+id/miAddStudent"
+        android:title="Add Student" />
+    <item
+        android:id="@+id/miDeleteStudent"
+        android:title="Delete Student" />
     <item
         android:id="@+id/miExit"
         android:title="Exit" />
