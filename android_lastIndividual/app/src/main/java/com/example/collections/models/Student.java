@@ -6,20 +6,25 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Student implements Parcelable {
+    private String id;
     private String fio;
     private String facultet;
     private String group;
+    private String phone;
     private List<Lessons> lessons;
 
     public String getFio() {
         return fio;
-    }
-
-    public Student() {
     }
 
     @Override

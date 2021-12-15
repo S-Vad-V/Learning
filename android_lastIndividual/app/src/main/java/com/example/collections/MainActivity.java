@@ -3,10 +3,8 @@ package com.example.collections;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.collections.adapters.StudentListAdapter;
+import com.example.collections.dao.DBHelper;
 import com.example.collections.models.Student;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -74,6 +72,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        DBHelper dbHelper = new DBHelper(this);
+        dbHelper.onCreate(dbHelper.getWritableDatabase());
+//        studentDao.addStudent(Student.builder()
+//                .fio("fio")
+//                .facultet("facultet")
+//                .group("group")
+//                .phone("phone")
+//                .build());
+        List<Student> lst = dbHelper.getAllStudents();
+        studentList.addAll(lst);
+
         createStudentList(null);
 
         activityResultLauncher = registerForActivityResult(

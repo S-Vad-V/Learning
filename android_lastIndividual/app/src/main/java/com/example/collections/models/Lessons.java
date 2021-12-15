@@ -3,8 +3,14 @@ package com.example.collections.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import lombok.Builder;
+import lombok.Data;
 
+
+@Builder
+@Data
 public class Lessons implements Parcelable {
+    private String id;
     private String name;
     private Integer mark;
 
