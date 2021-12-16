@@ -20,24 +20,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LessonsListAdapter extends BaseAdapter {
-    private List<Lessons> lessonsList;
+    private List<Lessons> subjectList;
     private Context context;
     private LayoutInflater layoutInflater;
+    private Integer selectedSubjectPosition;
 
-    public LessonsListAdapter(List<Lessons> lessonsList, Context context) {
-        this.lessonsList = lessonsList;
+    public void setSelectedSubjectPosition(Integer selectedSubjectPosition) {
+        if (selectedSubjectPosition == this.selectedSubjectPosition) {
+            this.selectedSubjectPosition = null;
+        } else {
+            this.selectedSubjectPosition = selectedSubjectPosition;
+        }
+    }
+
+    public LessonsListAdapter(List<Lessons> subjectList, Context context) {
+        this.subjectList = subjectList;
+        this.selectedSubjectPosition = null;
         this.context = context;
         this.layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return lessonsList.size();
+        return subjectList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return lessonsList.get(i);
+        return subjectList.get(i);
     }
 
     @Override
@@ -48,19 +58,27 @@ public class LessonsListAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         view = layoutInflater.inflate(R.layout.subject_element, viewGroup, false);
-        if (lessonsList.isEmpty())
+        if (subjectList.isEmpty())
             return view;
 
-        ((TextView) view.findViewById(R.id.tvSubjectName)).setText(lessonsList.get(index).getName());
-        ((TextView) view.findViewById(R.id.tvSubjectMark)).setText(lessonsList.get(index).getMark().toString());
+        ((TextView) view.findViewById(R.id.tvSubjectName)).setText(subjectList.get(index).getName());
+        ((TextView) view.findViewById(R.id.tvSubjectMark)).setText(subjectList.get(index).getMark().toString());
 
-        ((TextView) view.findViewById(R.id.tvSubjectMark)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        ((TextView) view.findViewById(R.id.tvSubjectMark)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
+        if (selectedSubjectPosition != null) {
+            if (index == selectedSubjectPosition) {
+                ((TextView) view.findViewById(R.id.tvSubjectName)).setTextColor(
+                        context.getResources().getColor(R.color.chooseFaculty));
+                ((TextView) view.findViewById(R.id.tvSubjectMark)).setTextColor(
+                        context.getResources().getColor(R.color.chooseFaculty));
             }
-        });
-
+        }
         return view;
     }
 }

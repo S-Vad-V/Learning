@@ -3,12 +3,16 @@ package com.example.collections.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Lessons implements Parcelable {
     private String id;
     private String name;
@@ -36,6 +40,7 @@ public class Lessons implements Parcelable {
     }
 
     protected Lessons(Parcel in) {
+        id = in.readString();
         name = in.readString();
         if (in.readByte() == 0) {
             mark = null;
@@ -63,6 +68,7 @@ public class Lessons implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
         parcel.writeString(name);
         if (mark == null) {
             parcel.writeByte((byte) 0);
