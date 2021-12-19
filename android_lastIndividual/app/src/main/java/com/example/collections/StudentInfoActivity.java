@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import com.example.collections.models.Lessons;
 import com.example.collections.models.Student;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class StudentInfoActivity extends AppCompatActivity {
@@ -45,10 +47,50 @@ public class StudentInfoActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.editAsiGroup)).setText(student.getGroup());
             ((TextView) findViewById(R.id.editAsiPhone)).setText(student.getPhone());
 
-            DBHelper dbHelper = new DBHelper(this);
-            student.setLessons(dbHelper.getAllStudentLessonsByStudentId(student.getId()));
 
-            subjectListAdapter = new LessonsListAdapter(student.getLessons(), StudentInfoActivity.this);
+            new AsyncTask<Student, Object, List<Lessons>>() {
+                DBHelper dbHelper;
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    dbHelper = new DBHelper(StudentInfoActivity.this);
+                }
+
+                @Override
+                protected List<Lessons> doInBackground(Student[] students) {
+                    return dbHelper.getAllStudentLessonsByStudentId(students[0].getId());
+                }
+
+                @Override
+                protected void onPostExecute(List<Lessons> lessons) {
+                    super.onProgressUpdate(lessons);
+                    student.setLessons(lessons);
+                    subjectListAdapter = new LessonsListAdapter(student.getLessons(), StudentInfoActivity.this);
+                    ((ListView) findViewById(R.id.lvAsiSubjects)).setAdapter(subjectListAdapter);
+
+                    ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            deleteSubject(position);
+                            return false;
+                        }
+                    });
+
+                    ((ListView) findViewById(R.id.lvAsiSubjects)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            if (selectedSubject != null && selectedSubject == position) {
+                                selectedSubject = null;
+                            } else {
+                                selectedSubject = position;
+                            }
+                            subjectListAdapter.setSelectedSubjectPosition(selectedSubject);
+                            subjectListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }.execute(student);
+//            student.setLessons(dbHelper.getAllStudentLessonsByStudentId(student.getId()));
         } else {
             student = new Student();
             student.setLessons(new ArrayList<>());
@@ -215,9 +257,6 @@ public class StudentInfoActivity extends AppCompatActivity {
             }
         }).setNegativeButton("Cancel", null);
         inputDialog.show();
-//        student.addSubject(new Subject(((EditText) findViewById(R.id.editAsiSubjectName)).getText().toString(),
-//                Integer.parseInt(((Spinner) findViewById(R.id.sAsiMark)).getSelectedItem().toString())));
-//        subjectListAdapter.notifyDataSetChanged();
     }
 
     public void saveState(View view) {

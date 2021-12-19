@@ -237,7 +237,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void saveStudent(Student student) {
+    public Student saveStudent(Student student) {
         SQLiteDatabase db = this.getWritableDatabase();
         String updateStudentQuery;
         if (student.getId() != null) {
@@ -263,8 +263,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(updateStudentQuery);
 
-        List<Student> studentList = getAllStudents();
-
+        if (student.getId() != null)
+            if (student.getLessons() == null)
+                student.setLessons(getAllStudentLessonsByStudentId(student.getId()));
+            else
+                student.getLessons().addAll(getAllStudentLessonsByStudentId(student.getId()));
         String deleteStudentLessonsQuery = String.format("delete from student_lessons\n" +
                         "where student_id = '%s';",
                 student.getId()
@@ -272,8 +275,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(deleteStudentLessonsQuery);
         if (student.getLessons() != null) {
             student.getLessons().forEach(lesson -> {
-                List<Lessons> lessons = getAllLessons();
-                List<String> studentLessons = getStudentLessons();
                 String saveLessonQuery;
                 String updateStudentLessonsQuery;
                 if (lesson.getId() != null) {
@@ -316,10 +317,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 db.execSQL(saveLessonQuery);
                 db.execSQL(updateStudentLessonsQuery);
-                studentLessons = getStudentLessons();
-                System.out.println(studentLessons);
             });
         }
+        return student;
     }
 
 }

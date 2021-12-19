@@ -33,7 +33,7 @@ public class Student implements Parcelable {
                 "fio='" + fio + '\'' +
                 ", facultet='" + facultet + '\'' +
                 ", group='" + group + '\'' +
-                ", subjects=" + lessons +
+                ", lessons=" + lessons +
                 '}';
     }
 

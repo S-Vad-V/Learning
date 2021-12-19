@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -56,20 +57,22 @@ public class MainActivity extends AppCompatActivity {
 
         studentList = new ArrayList<>();
 
+
         this.dbHelper = new DBHelper(this);
-        studentList.addAll(dbHelper.getAllStudents());
-//        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-//        int size = sharedPreferences.getInt("count", 0);
-//        if (size > 0) {
-//            Gson gson = (new GsonBuilder()).create();
-//            for (int i = 0; i < size; i++) {
-//                String studentJson = sharedPreferences.getString("student" + i, "");
-//                if (!studentJson.isEmpty()) {
-//                    Student student = gson.fromJson(studentJson, Student.class);
-//                    studentList.add(student);
-//                }
-//            }
-//        }
+        new AsyncTask<Object, Object, List<Student>>() {
+            @Override
+            protected List<Student> doInBackground(Object[] objects) {
+                return dbHelper.getAllStudents();
+            }
+
+            @Override
+            protected void onPostExecute(List<Student> students) {
+                super.onProgressUpdate(students);
+                studentList.addAll(students);
+            }
+        }.execute();
+//        studentList.addAll(dbHelper.getAllStudents());
+
 
         createStudentList(null);
 
@@ -82,16 +85,37 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             Student student = intent.getParcelableExtra("student");
                             if (action == Action.add) {
+                                new AsyncTask<Object, Student, Student>() {
+                                    @Override
+                                    protected Student doInBackground(Object[] objects) {
+                                        return dbHelper.saveStudent(student);
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Student student) {
+                                        super.onProgressUpdate(student);
+                                        studentList.add(student);
+                                        studentListAdapter.notifyDataSetChanged();
+                                    }
+                                }.execute();
                                 studentList.add(student);
+                                position = null;
                             } else {
+                                new AsyncTask<Student, Student, Object>() {
+                                    @Override
+                                    protected Student doInBackground(Student[] objects) {
+                                        return dbHelper.saveStudent(objects[0]);
+                                    }
+                                }.execute(student);
                                 studentList.set(position, student);
-                                dbHelper.saveStudent(student);
                                 studentListAdapter.notifyDataSetChanged();
                                 action = Action.none;
+                                position = null;
                             }
                             studentListAdapter.setChoosePosition(null);
                             studentListAdapter.notifyDataSetChanged();
                             action = Action.none;
+                            position = null;
 //                            Toast.makeText(getApplicationContext(),
 //                                    "Student :" + student.toString() + "\n Success saved",
 //                                    Toast.LENGTH_SHORT).show();
@@ -153,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 studentListAdapter.setChoosePosition(i);
-                if (position == i) {
+                if (position != null && position == i) {
                     position = null;
                 } else {
                     position = i;
@@ -195,9 +219,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Student student = studentList.get(index);
-                studentList.remove(index);
-                studentListAdapter.notifyDataSetChanged();
-                dbHelper.deleteStudent(student.getId());
+                new AsyncTask() {
+
+
+                    @Override
+                    protected Object doInBackground(Object[] objects) {
+                        dbHelper.deleteStudent(student.getId());
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object value) {
+                        super.onProgressUpdate(value);
+                        studentList.remove(index);
+                        studentListAdapter.notifyDataSetChanged();
+                    }
+                }.execute();
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -211,7 +248,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         if (studentList != null) {
-            studentList.forEach(dbHelper::saveStudent);
+            new AsyncTask() {
+                @Override
+                protected Object doInBackground(Object[] objects) {
+                    studentList.forEach(dbHelper::saveStudent);
+                    return null;
+                }
+            }.execute();
         }
         super.onDestroy();
     }
