@@ -153,7 +153,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 studentListAdapter.setChoosePosition(i);
-                position = i;
+                if (position == i) {
+                    position = null;
+                } else {
+                    position = i;
+                }
                 studentListAdapter.notifyDataSetChanged();
             }
         };
