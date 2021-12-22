@@ -1,7 +1,7 @@
 % размещение по к c повторений
 eval([],_).
 eval([Head|Tail],Set):-member(Head,Set),eval(Tail,Set).
-permutation_with(Set, N,[HEAD|TAIL]):- length(List,5), eval(List,Set),
+permutation_with(Set, N,[HEAD|TAIL]):- length(List,N), eval(List,Set).
 
 % перестановки
 permutation(List, Permutation):-
@@ -22,15 +22,25 @@ subset([E|Tail], [E|NTail]):-
 subset([_|Tail], NTail):-
   subset(Tail, NTail).
 
-% сочетание по к без повторений
-comb(_, 0, []).
-comb([X|Tail], N, [X|Comb]) :- N > 0, N1 is N-1, comb(Tail, N1, Comb).
-comb([_|Tail], N, Comb) :- N > 0, comb(Tail, N, Comb).
+% сочетание по к без повторений	
+comb_without(0,_,[]).
+comb_without(N,[HEAD|TAIL],[HEAD|TAIL1]):-
+	N>0,
+	N1 is N-1,
+	comb_without(N1,TAIL,TAIL1).
+comb_without(N,[_|TAIL],TAIL1):-
+	N>0,
+	comb_without(N,TAIL,TAIL1).
 
 % сочетание по к с повторений
-comb(_, 0, []).
-comb([X|Tail], N, [X|Comb]) :- N > 0, N1 is N-1, comb(Tail, N1, Comb).
-comb([_|Tail], N, Comb) :- N > 0, comb(Tail, N, Comb).
+comb_rep(0,_,[]).
+comb_rep(N,[HEAD|TAIL],[HEAD|TAIL1]):-
+	N>0,
+	N1 is N-1,
+	comb_rep(N1,[HEAD|TAIL],TAIL1).
+comb_rep(N,[_|TAIL],TAIL1):-
+	N>0,
+	comb_rep(N,TAIL,TAIL1).
 
 % 2
 count([],_,0).

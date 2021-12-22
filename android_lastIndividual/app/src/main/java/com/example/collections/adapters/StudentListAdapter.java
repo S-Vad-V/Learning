@@ -1,12 +1,16 @@
 package com.example.collections.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.collections.MainActivity;
 import com.example.collections.R;
 import com.example.collections.models.Student;
 
@@ -62,6 +66,18 @@ public class StudentListAdapter extends BaseAdapter {
         view = layoutInflater.inflate(R.layout.student_element, viewGroup, false);
         if (students.isEmpty())
             return view;
+
+        ((TextView) view.findViewById(R.id.textElementPhone)).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String phone = ((TextView) view.findViewById(R.id.textElementPhone)).getText().toString();
+                if (!phone.isEmpty()) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                    context.startActivity(intent);
+                }
+                return true;
+            }
+        });
 
         ((TextView) view.findViewById(R.id.tvElementFIO)).setText(students.get(index).getFio());
         ((TextView) view.findViewById(R.id.tvElementFaculty)).setText(students.get(index).getFacultet());

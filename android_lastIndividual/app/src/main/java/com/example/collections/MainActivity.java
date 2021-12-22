@@ -176,28 +176,28 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                studentListAdapter.setChoosePosition(i);
                 if (position != null && position == i) {
                     position = null;
                 } else {
                     position = i;
                 }
+                studentListAdapter.setChoosePosition(position);
                 studentListAdapter.notifyDataSetChanged();
             }
         };
-        AdapterView.OnItemLongClickListener longClickListener = new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int index, long l) {
-                if (!studentList.isEmpty()) {
-                    Student student = studentList.get(index);
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", student.getPhone(), null));
-                    startActivity(intent);
-                }
-                return true;
-            }
-        };
+//        AdapterView.OnItemLongClickListener longClickListener = new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int index, long l) {
+//                if (!studentList.isEmpty()) {
+//                    Student student = studentList.get(index);
+//                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", student.getPhone(), null));
+//                    startActivity(intent);
+//                }
+//                return true;
+//            }
+//        };
         listView.setOnItemClickListener(clickListener);
-        listView.setOnItemLongClickListener(longClickListener);
+//        listView.setOnItemLongClickListener(longClickListener);
     }
 
     private void updateStudent(int i) {

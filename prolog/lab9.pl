@@ -8,8 +8,7 @@ vertex(5).
 vertex(6).
 
 edge(0, 1). 
-edge(1, 4).
-edge(2, 3).
+edge(3, 4).
 edge(4, 5).
 edge(2, 5).
 edge(4, 6).

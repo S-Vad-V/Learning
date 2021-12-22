@@ -263,11 +263,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(updateStudentQuery);
 
-        if (student.getId() != null)
-            if (student.getLessons() == null)
-                student.setLessons(getAllStudentLessonsByStudentId(student.getId()));
-            else
-                student.getLessons().addAll(getAllStudentLessonsByStudentId(student.getId()));
         String deleteStudentLessonsQuery = String.format("delete from student_lessons\n" +
                         "where student_id = '%s';",
                 student.getId()
